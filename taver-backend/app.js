@@ -125,7 +125,8 @@ app.post('/getFollowedArtists', async function(req, res)
     {
         let token = await getToken(req.body.code, req.body.code_verifier); 
         var userApi = SpotifyApi.withAccessToken(process.env.SPOTIFY_CLIENT_ID, token);
-        var artistList = await userApi.currentUser.topItems("artists");
+        var artistList = await userApi.currentUser.followedArtists();
+        
 
         console.log("followed artists:");
         console.log(artistList);

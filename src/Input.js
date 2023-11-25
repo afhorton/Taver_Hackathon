@@ -4,6 +4,7 @@ var CryptoJS = require("crypto-js");
 var redirectUri = "http://localhost:3000/";
 var clientId = "03443a9e213f4dacb4e591779a560834";
 
+
 const generateRandomString = (length) => {
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const values = crypto.getRandomValues(new Uint8Array(length));
@@ -36,10 +37,14 @@ async function getCodeCallenge() {
 
 export default function Input({ setConcerts, setArtist }) {
   const [artistName, setArtistName] = useState("Taylor Swift");
+  const [signedIn, setSignedIn] = useState(false);
+
   let handleSpotifySignIn = () => {
     getCodeCallenge().then((result) => {
-      window.location.href = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=user-top-read&code_challenge_method=S256&code_challenge=${result}`;
+      window.location.href = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=user-follow-read&code_challenge_method=S256&code_challenge=${result}`;
     });
+    setSignedIn(true);
+    localStorage.setItem("signedIn", "true");
   };
 
   let handleSubmit = async (e) => {
@@ -81,9 +86,10 @@ export default function Input({ setConcerts, setArtist }) {
         </div>
         <button type="submit">Submit</button>
       </form>
-      <button onClick={handleSpotifySignIn}>
+     { signedIn === false && 
+     <button onClick={handleSpotifySignIn}>
         Sign in to Spotify
-      </button>
+      </button>}
     </div>
 
   )
